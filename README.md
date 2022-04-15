@@ -1,5 +1,8 @@
 ### Django Star Wars People Api
 
+### Prerequisites
+- Python >= 3.8
+
 To get this app running, first clone this repo. 
 
 Then install the requirements:
