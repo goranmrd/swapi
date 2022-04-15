@@ -1,0 +1,18 @@
+{% extends "swpeople/base.html" %}
+{% block content %}
+<div class="ms-3 pb-3">
+  <h2 class="mt-3">Collections </h2><a href='{% url "swpeople:fetch_people" %}' class="btn btn-success mt-2">Fetch</a>  
+</div>
+
+<div>
+    <table class="table">
+    {% for obj in objs %}
+    <tr>
+        <td>
+            <a class="ps-3" href='{% url "swpeople:get_people_details" id=obj.id %}'>{{obj.created_at}}</a>
+        </td>
+    </tr>
+{% endfor %}
+</table>
+</div>
+{% endblock %}

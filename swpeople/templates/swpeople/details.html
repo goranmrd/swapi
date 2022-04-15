@@ -1,0 +1,78 @@
+{% extends "swpeople/base.html" %}
+{% block content %}
+
+<div id="checkboxes" class="pt-3 ps-2">
+    <p>
+        {% for th in table_headers %}
+            <input type="checkbox" class="btn-check" id="btn-check-outlined{{ forloop.counter }}"
+                   autocomplete="off" name="{{ th }}">
+            <label class="btn btn-outline-primary" for="btn-check-outlined{{ forloop.counter }}">{{ th }}</label>
+        {% endfor %}
+        <button type="button" class="btn btn-success" id="filter_button" style="margin-left: 3%;">Filter</button>
+    </p>
+</div>
+<div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      {% for th in table_headers %}
+      <th scope="col">{{ th }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+  {% for td in table %}
+   <tr>
+      {% if td.name %}<td scope="col">{{ td.name }}</td>{% endif %}
+      {% if td.height %}<td scope="col">{{ td.height }}</td>{% endif %}
+      {% if td.mass %}<td scope="col">{{ td.mass }}</td>{% endif %}
+      {% if td.hair_color %}<td scope="col">{{ td.hair_color }}</td>{% endif %}
+      {% if td.skin_color %}<td scope="col">{{ td.skin_color }}</td>{% endif %}
+      {% if td.eye_color %}<td scope="col">{{ td.eye_color }}</td>{% endif %}
+      {% if td.birth_year %}<td scope="col">{{ td.birth_year }}</td>{% endif %}
+      {% if td.gender %}<td scope="col">{{ td.gender }}</td>{% endif %}
+      {% if td.homeworld %}<td scope="col">{{ td.homeworld }}</td>{% endif %}
+      {% if td.edited %}<td scope="col">{{ td.edited }}</td>{% endif %}
+      {% if td.url %}<td scope="col">{{ td.url }}</td>{% endif %}
+      {% if td.date %}<td scope="col">{{ td.date }}</td>{% endif %}
+      {% if td.count %}<td scope="col">{{ td.count }}</td>{% endif %} 
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+    </div>
+<div class="row">
+    <div class="col-3 mb-3">
+        <a href='{% url "swpeople:get_people_details" id=obj.id %}?load_more=true' class="btn btn-primary load-more ps-2" id="load-more">Load More</a>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#filter_button").click(function () {
+            loadTable("{% url "swpeople:get_people_details" id=obj.id %}");
+        });
+        $("#load-more").click(function (e) {
+            e.preventDefault();
+            loadTable("{% url "swpeople:get_people_details" id=obj.id %}?load_more=true");
+        });
+    });
+    function loadTable(url) {
+        let selected = [];
+            $('#checkboxes input:checked').each(function () {
+                selected.push($(this).attr('name'));
+            });
+            $.ajax({
+                type: 'GET',
+                url: url,
+                data: {"filter_names": selected},
+                success: function (response) {
+                    $(".table").replaceWith($(response).find(".table"));
+                },
+                error: function (response) {
+                    console.log(response)
+                }
+            })
+    }
+</script>
+{% endblock %}

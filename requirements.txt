@@ -1,0 +1,4 @@
+django>=2
+django-extensions
+petl
+requests
